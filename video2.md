@@ -1,108 +1,126 @@
-```markdown
 # SQL Mock Interview Series
 
-Welcome to the **SQL Mock Interview Series**, designed to help you prepare for real-world SQL interview scenarios with a mix of theoretical questions and practical exercises.
-
----
-
-## Video - 01
+## Video - 03
 
 🎥 **Video Link**: [Watch on YouTube](#)
 
-### Questions:
+---
 
-1. **What is the difference between `UNION` and `UNION ALL`?**
+### Questions Covered
 
-2. **Count the number of employees in the `emp` table.**
-   - Write an SQL query to count the total number of employees.
+1. **Difference between `NULL` and "NULL"?**
+   - Understand the distinction between the `NULL` value (absence of a value) and the string "NULL".
 
-3. **Find employees whose salary is greater than their managers.**
-   - Write an SQL query to identify employees earning more than their managers.
+2. **Difference between `AND` and `OR` Operators in SQL?**
+   - Explore how these logical operators impact query results.
+
+3. **Difference between `CROSS JOIN` and `LEFT JOIN`?**
+   - Understand when to use these joins and their outcomes.
+
+4. **Difference between `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()`?**
+   - Learn the differences and use cases of these window functions.
+
+5. **Do we need a Primary Key in 3rd Normal Form (3NF)?**
+   - Understand the role of primary keys in maintaining 3NF.
+
+6. **Find Customers Who Have Not Bought Anything in the Last 6 Months** (Two approaches).
+   - Write queries to identify customers with no orders in the last six months.
+
+7. **Write an SQL Query to Get the Second-Highest Salary Using a Subquery?**
+   - Find the second-highest salary using efficient subquery techniques.
 
 ---
 
-## Dataset 1: Employee and Department Tables
+## Datasets Used
 
-### **Employee Table (`emp`)**
+### **Orders Table (`orders`)**
 
-The `emp` table stores details about employees, including their ID, name, salary, department, and manager.
+The `orders` table contains details about customer purchases.
 
 ```sql
-CREATE TABLE emp (
-    emp_id INT PRIMARY KEY,        -- Employee ID
-    emp_name VARCHAR(100),         -- Employee Name
-    salary DECIMAL(10, 2),         -- Employee Salary
-    department_id INT,             -- Department ID
-    manager_id INT                 -- Manager ID
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,         -- Order ID
+    customer_id INT,                  -- Customer ID
+    order_date DATE,                  -- Order Date
+    total_amount DECIMAL(10, 2),      -- Order Total Amount
+    states VARCHAR(50),               -- Region
+    category VARCHAR(50)              -- Category
 );
 
-INSERT INTO emp (emp_id, emp_name, salary, department_id, manager_id) VALUES
-(1, 'Alice Johnson', 75000, 101, NULL),   
-(2, 'Bob Smith', 95000, 101, 1),         
-(3, 'Charlie Davis', 55000, 102, NULL),  
-(4, 'Diana Prince', 85000, 102, 3),      
-(5, 'Eve Adams', 40000, 103, 1),         
-(6, 'Frank Taylor', 60000, NULL, 1),     
-(7, 'Grace Lee', 80000, 101, 1),         
-(8, 'Helen Carter', 65000, NULL, 3),      
-(9, 'Ivy Brown', 87000, 102, 3),        
-(10, 'Jack Wilson', 50000, 103, 1),      
-(11, 'Karen White', 75000, 103, 1);
+INSERT INTO orders (order_id, customer_id, order_date, total_amount, states, category) VALUES
+(1, 1, '2024-11-15', 500.00, 'Maharashtra', 'Electronics'),
+(2, 2, '2024-10-10', 1200.00, 'Karnataka', 'Furniture'),
+(3, 3, '2024-09-25', 300.00, 'Tamil Nadu', 'Books'),
+(4, 4, '2024-06-05', 1500.00, 'Delhi', 'Clothing'),
+(5, 1, '2023-12-12', 700.00, 'Kerala', 'Electronics'),
+(6, 2, '2024-11-20', 800.00, 'West Bengal', 'Home Appliances'),
+(7, 3, '2023-05-10', 600.00, 'Rajasthan', 'Furniture'),
+(8, 5, '2024-07-15', 450.00, 'Gujarat', 'Books'),
+(9, 6, '2024-01-25', 1000.00, 'Punjab', 'Electronics'), 
+(10, 7, '2024-03-10', 550.00, 'Uttar Pradesh', 'Clothing');
 ```
 
-### **Department Table (`dept`)**
+### **Customers Table (`customers`)**
 
-The `dept` table contains information about various departments.
+The `customers` table holds information about customers.
 
 ```sql
-CREATE TABLE dept (
-    department_id INT PRIMARY KEY,     -- Department ID
-    department_name VARCHAR(100)      -- Department Name
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,         -- Customer ID
+    customer_name VARCHAR(100),          -- Customer Name
+    email VARCHAR(100),                  -- Email Address
+    phone VARCHAR(15)                    -- Phone Number
 );
 
-INSERT INTO dept (department_id, department_name) 
-VALUES
-(101, 'Human Resources'),
-(102, 'Engineering'),
-(103, 'Finance'),
-(104, 'IT'),
-(105, 'Marketing');
-```
-
-### **Preview Data**
-
-- **Employee Table:**
-  ```sql
-  SELECT * FROM emp;
-  ```
-
-- **Department Table:**
-  ```sql
-  SELECT * FROM dept;
-  ```
-
----
-
-## Practice SQL Queries
-
-### Question 1: Difference between `UNION` and `UNION ALL`
-- `UNION` combines the result of two queries and removes duplicate rows.
-- `UNION ALL` combines the result of two queries but includes all duplicate rows.
-
-### Question 2: Count the Number of Employees
-```sql
-SELECT COUNT(*) AS employee_count FROM emp;
-```
-
-### Question 3: Find Employees with Salary Greater than Their Managers
-```sql
-SELECT e.emp_name, e.salary, m.emp_name AS manager_name, m.salary AS manager_salary
-FROM emp e
-LEFT JOIN emp m ON e.manager_id = m.emp_id
-WHERE e.salary > m.salary;
+INSERT INTO customers (customer_id, customer_name, email, phone) VALUES
+(1, 'Alice Johnson', 'alice@example.com', '1234567890'),
+(2, 'Bob Smith', 'bob@example.com', '2345678901'),
+(3, 'Charlie Davis', 'charlie@example.com', '3456789012'),
+(4, 'Diana Prince', 'diana@example.com', '4567890123'),
+(5, 'Eve Adams', 'eve@example.com', '5678901234'),
+(6, 'Frank Taylor', 'frank@example.com', '6789012345'), 
+(7, 'Grace Lee', 'grace@example.com', '7890133456'),
+(8, 'Sam', 'grace@example.com', '9890123456'),
+(9, 'Alex', 'grace@example.com', '8890123456');
 ```
 
 ---
 
-### Stay Tuned
-More videos and questions will be added to the series. Practice regularly to master SQL for interviews!
+### Practical Exercises
+
+#### **Question 6: Customers Who Have Not Bought Anything in the Last 6 Months**
+
+- **Approach 1: Using `NOT IN`**
+```sql
+SELECT c.customer_id, c.customer_name
+FROM customers c
+WHERE c.customer_id NOT IN (
+    SELECT DISTINCT customer_id
+    FROM orders
+    WHERE order_date > DATE_ADD(CURDATE(), INTERVAL -6 MONTH)
+);
+```
+
+- **Approach 2: Using `LEFT JOIN`**
+```sql
+SELECT c.customer_id, c.customer_name
+FROM customers c
+LEFT JOIN orders o ON c.customer_id = o.customer_id 
+    AND o.order_date > DATE_ADD(CURDATE(), INTERVAL -6 MONTH)
+WHERE o.order_id IS NULL;
+```
+
+---
+
+### **Question 7: Second-Highest Salary**
+
+- Find the second-highest salary using a subquery:
+```sql
+SELECT MAX(salary) AS second_highest_salary
+FROM employees
+WHERE salary < (
+    SELECT MAX(salary)
+    FROM employees
+);
+
+
