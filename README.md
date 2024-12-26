@@ -1,48 +1,60 @@
-# SQL-Mock-Interview-Series
+# SQL Mock Interview Series
 
 ## SQL Mock Interview 2
 
-Question 1
-What is the difference between View and Materilized View in SQL
+### Questions
 
-Question 2
-What id the difference between Union and Union ALL
+1. **What is the difference between a View and a Materialized View in SQL?**
 
-Dataset (emp and sales table)
+2. **What is the difference between UNION and UNION ALL?**
 
--- emp table 1
--- Step 1: Create the EMP table
+3. **Self Join vs Cross Join:**  
+   Explain the differences and provide examples for both.
+
+4. **Self Join Query:**  
+   Write an SQL query to find employees along with their manager's name and salary.
+
+5. **Recursive CTE Query:**  
+   Write an SQL query using a recursive CTE to find employees along with their manager's name and salary.
+
+6. **Find Top Hotels by Stays:**  
+   Write an SQL query to find the top 4 hotels in each month with the highest number of stays.
+
+---
+
+### Dataset 1: Employee and Department Tables
+
+#### Employee Table (`emp`)
+```sql
 CREATE TABLE emp (
-    emp_id INT PRIMARY KEY,        -- Employee ID
-    emp_name VARCHAR(100),         -- Employee Name
-    salary DECIMAL(10, 2),         -- Salary
-    department_id INT,             -- Department ID
-    manager_id INT                 -- Manager ID
+    emp_id INT PRIMARY KEY,        
+    emp_name VARCHAR(100),         
+    salary DECIMAL(10, 2),         
+    department_id INT,             
+    manager_id INT                 
 );
 
--- Step 2: Insert sample records
 INSERT INTO emp (emp_id, emp_name, salary, department_id, manager_id) VALUES
 (1, 'Alice Johnson', 75000, 101, NULL),   
 (2, 'Bob Smith', 95000, 101, 1),         
 (3, 'Charlie Davis', 55000, 102, NULL),  
 (4, 'Diana Prince', 85000, 102, 3),      
-(5, 'Eve Adams', 40000, 103, 1),       
+(5, 'Eve Adams', 40000, 103, 1),         
 (6, 'Frank Taylor', 60000, NULL, 1),     
 (7, 'Grace Lee', 80000, 101, 1),         
 (8, 'Helen Carter', 65000, NULL, 3),      
 (9, 'Ivy Brown', 87000, 102, 3),        
 (10, 'Jack Wilson', 50000, 103, 1),      
-(11, 'Karen White', 75000, 103, 1);     
+(11, 'Karen White', 75000, 103, 1);
+```
 
-
-DROP TABLE IF EXISTS dept;
--- department table
+#### Department Table (`dept`)
+```sql
 CREATE TABLE dept (
-    department_id INT PRIMARY KEY,     -- Department ID
-    department_name VARCHAR(100)      -- Department Name
+    department_id INT PRIMARY KEY,     
+    department_name VARCHAR(100)      
 );
 
--- Insert sample records
 INSERT INTO dept (department_id, department_name) 
 VALUES
 (101, 'Human Resources'),
@@ -50,36 +62,36 @@ VALUES
 (103, 'Finance'),
 (104, 'IT'),
 (105, 'Marketing');
+```
 
-
-
+#### Preview Data
+```sql
 SELECT * FROM emp;
 SELECT * FROM dept;
+```
 
-Question 3
-Self Join vs Cross JOIN
+---
 
-Question 4 (Self JOIN)
-Write SQL query to find employee along with their manager name and salary?
+### Dataset 2: Hotels and Bookings Tables
 
-
-
-Question 5 (Solve using recursive CTE)
-Write SQL query to find employee along with their manager name and salary?
-
-
-Question 6
-Find top 4 hotel in each month with highest number of stays?
-
-Datasets
--- 
--- Create table for Hotels
+#### Hotels Table
+```sql
 CREATE TABLE Hotels (
     hotel_id SERIAL PRIMARY KEY,
     hotel_name VARCHAR(255) NOT NULL
 );
 
--- Create table for Bookings
+INSERT INTO Hotels (hotel_name)
+VALUES 
+    ('Hotel A'),
+    ('Hotel B'),
+    ('Hotel C'),
+    ('Hotel D'),
+    ('Hotel E');
+```
+
+#### Bookings Table
+```sql
 CREATE TABLE Bookings (
     booking_id SERIAL PRIMARY KEY,
     booking_date DATE NOT NULL,
@@ -88,17 +100,6 @@ CREATE TABLE Bookings (
     FOREIGN KEY (hotel_id) REFERENCES Hotels(hotel_id)
 );
 
-
--- Insert into Hotels
-INSERT INTO Hotels (hotel_name)
-VALUES 
-    ('Hotel A'),
-    ('Hotel B'),
-    ('Hotel C'),
-    ('Hotel D'),
-    ('Hotel E');
-
--- Insert into Bookings
 INSERT INTO Bookings (booking_date, checkin_date, hotel_id)
 VALUES
     ('2024-01-01', '2024-01-02', 1),
@@ -135,7 +136,8 @@ VALUES
     ('2024-07-01', '2024-07-02', 1),
     ('2024-07-03', '2024-07-04', 2),
     ('2024-07-05', '2024-07-06', 3);
+```
 
+--- 
 
--- END
-
+### End of Dataset
