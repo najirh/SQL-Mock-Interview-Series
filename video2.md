@@ -1,126 +1,143 @@
 # SQL Mock Interview Series
 
-## Video - 03
+## SQL Mock Interview 2
 
-🎥 **Video Link**: [Watch on YouTube](#)
+### Questions
 
----
+1. **What is the difference between a View and a Materialized View in SQL?**
 
-### Questions Covered
+2. **What is the difference between UNION and UNION ALL?**
 
-1. **Difference between `NULL` and "NULL"?**
-   - Understand the distinction between the `NULL` value (absence of a value) and the string "NULL".
+3. **Self Join vs Cross Join:**  
+   Explain the differences and provide examples for both.
 
-2. **Difference between `AND` and `OR` Operators in SQL?**
-   - Explore how these logical operators impact query results.
+4. **Self Join Query:**  
+   Write an SQL query to find employees along with their manager's name and salary.
 
-3. **Difference between `CROSS JOIN` and `LEFT JOIN`?**
-   - Understand when to use these joins and their outcomes.
+5. **Recursive CTE Query:**  
+   Write an SQL query using a recursive CTE to find employees along with their manager's name and salary.
 
-4. **Difference between `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()`?**
-   - Learn the differences and use cases of these window functions.
-
-5. **Do we need a Primary Key in 3rd Normal Form (3NF)?**
-   - Understand the role of primary keys in maintaining 3NF.
-
-6. **Find Customers Who Have Not Bought Anything in the Last 6 Months** (Two approaches).
-   - Write queries to identify customers with no orders in the last six months.
-
-7. **Write an SQL Query to Get the Second-Highest Salary Using a Subquery?**
-   - Find the second-highest salary using efficient subquery techniques.
+6. **Find Top Hotels by Stays:**  
+   Write an SQL query to find the top 4 hotels in each month with the highest number of stays.
 
 ---
 
-## Datasets Used
+### Dataset 1: Employee and Department Tables
 
-### **Orders Table (`orders`)**
-
-The `orders` table contains details about customer purchases.
-
+#### Employee Table (`emp`)
 ```sql
-CREATE TABLE orders (
-    order_id INT PRIMARY KEY,         -- Order ID
-    customer_id INT,                  -- Customer ID
-    order_date DATE,                  -- Order Date
-    total_amount DECIMAL(10, 2),      -- Order Total Amount
-    states VARCHAR(50),               -- Region
-    category VARCHAR(50)              -- Category
+CREATE TABLE emp (
+    emp_id INT PRIMARY KEY,        
+    emp_name VARCHAR(100),         
+    salary DECIMAL(10, 2),         
+    department_id INT,             
+    manager_id INT                 
 );
 
-INSERT INTO orders (order_id, customer_id, order_date, total_amount, states, category) VALUES
-(1, 1, '2024-11-15', 500.00, 'Maharashtra', 'Electronics'),
-(2, 2, '2024-10-10', 1200.00, 'Karnataka', 'Furniture'),
-(3, 3, '2024-09-25', 300.00, 'Tamil Nadu', 'Books'),
-(4, 4, '2024-06-05', 1500.00, 'Delhi', 'Clothing'),
-(5, 1, '2023-12-12', 700.00, 'Kerala', 'Electronics'),
-(6, 2, '2024-11-20', 800.00, 'West Bengal', 'Home Appliances'),
-(7, 3, '2023-05-10', 600.00, 'Rajasthan', 'Furniture'),
-(8, 5, '2024-07-15', 450.00, 'Gujarat', 'Books'),
-(9, 6, '2024-01-25', 1000.00, 'Punjab', 'Electronics'), 
-(10, 7, '2024-03-10', 550.00, 'Uttar Pradesh', 'Clothing');
+INSERT INTO emp (emp_id, emp_name, salary, department_id, manager_id) VALUES
+(1, 'Alice Johnson', 75000, 101, NULL),   
+(2, 'Bob Smith', 95000, 101, 1),         
+(3, 'Charlie Davis', 55000, 102, NULL),  
+(4, 'Diana Prince', 85000, 102, 3),      
+(5, 'Eve Adams', 40000, 103, 1),         
+(6, 'Frank Taylor', 60000, NULL, 1),     
+(7, 'Grace Lee', 80000, 101, 1),         
+(8, 'Helen Carter', 65000, NULL, 3),      
+(9, 'Ivy Brown', 87000, 102, 3),        
+(10, 'Jack Wilson', 50000, 103, 1),      
+(11, 'Karen White', 75000, 103, 1);
 ```
 
-### **Customers Table (`customers`)**
-
-The `customers` table holds information about customers.
-
+#### Department Table (`dept`)
 ```sql
-CREATE TABLE customers (
-    customer_id INT PRIMARY KEY,         -- Customer ID
-    customer_name VARCHAR(100),          -- Customer Name
-    email VARCHAR(100),                  -- Email Address
-    phone VARCHAR(15)                    -- Phone Number
+CREATE TABLE dept (
+    department_id INT PRIMARY KEY,     
+    department_name VARCHAR(100)      
 );
 
-INSERT INTO customers (customer_id, customer_name, email, phone) VALUES
-(1, 'Alice Johnson', 'alice@example.com', '1234567890'),
-(2, 'Bob Smith', 'bob@example.com', '2345678901'),
-(3, 'Charlie Davis', 'charlie@example.com', '3456789012'),
-(4, 'Diana Prince', 'diana@example.com', '4567890123'),
-(5, 'Eve Adams', 'eve@example.com', '5678901234'),
-(6, 'Frank Taylor', 'frank@example.com', '6789012345'), 
-(7, 'Grace Lee', 'grace@example.com', '7890133456'),
-(8, 'Sam', 'grace@example.com', '9890123456'),
-(9, 'Alex', 'grace@example.com', '8890123456');
+INSERT INTO dept (department_id, department_name) 
+VALUES
+(101, 'Human Resources'),
+(102, 'Engineering'),
+(103, 'Finance'),
+(104, 'IT'),
+(105, 'Marketing');
+```
+
+#### Preview Data
+```sql
+SELECT * FROM emp;
+SELECT * FROM dept;
 ```
 
 ---
 
-### Practical Exercises
+### Dataset 2: Hotels and Bookings Tables
 
-#### **Question 6: Customers Who Have Not Bought Anything in the Last 6 Months**
-
-- **Approach 1: Using `NOT IN`**
+#### Hotels Table
 ```sql
-SELECT c.customer_id, c.customer_name
-FROM customers c
-WHERE c.customer_id NOT IN (
-    SELECT DISTINCT customer_id
-    FROM orders
-    WHERE order_date > DATE_ADD(CURDATE(), INTERVAL -6 MONTH)
-);
-```
-
-- **Approach 2: Using `LEFT JOIN`**
-```sql
-SELECT c.customer_id, c.customer_name
-FROM customers c
-LEFT JOIN orders o ON c.customer_id = o.customer_id 
-    AND o.order_date > DATE_ADD(CURDATE(), INTERVAL -6 MONTH)
-WHERE o.order_id IS NULL;
-```
-
----
-
-### **Question 7: Second-Highest Salary**
-
-- Find the second-highest salary using a subquery:
-```sql
-SELECT MAX(salary) AS second_highest_salary
-FROM employees
-WHERE salary < (
-    SELECT MAX(salary)
-    FROM employees
+CREATE TABLE Hotels (
+    hotel_id SERIAL PRIMARY KEY,
+    hotel_name VARCHAR(255) NOT NULL
 );
 
+INSERT INTO Hotels (hotel_name)
+VALUES 
+    ('Hotel A'),
+    ('Hotel B'),
+    ('Hotel C'),
+    ('Hotel D'),
+    ('Hotel E');
+```
 
+#### Bookings Table
+```sql
+CREATE TABLE Bookings (
+    booking_id SERIAL PRIMARY KEY,
+    booking_date DATE NOT NULL,
+    checkin_date DATE NOT NULL,
+    hotel_id INT NOT NULL,
+    FOREIGN KEY (hotel_id) REFERENCES Hotels(hotel_id)
+);
+
+INSERT INTO Bookings (booking_date, checkin_date, hotel_id)
+VALUES
+    ('2024-01-01', '2024-01-02', 1),
+    ('2024-01-03', '2024-01-04', 2),
+    ('2024-01-04', '2024-01-05', 1),
+    ('2024-01-05', '2024-01-06', 3),
+    ('2024-01-10', '2024-01-11', 4),
+    ('2024-02-01', '2024-02-02', 1),
+    ('2024-02-03', '2024-02-04', 5),
+    ('2024-02-05', '2024-02-06', 2),
+    ('2024-02-06', '2024-02-07', 3),
+    ('2024-02-07', '2024-02-08', 1),
+    ('2024-02-09', '2024-02-10', 4),
+    ('2024-03-01', '2024-03-02', 3),
+    ('2024-03-03', '2024-03-04', 1),
+    ('2024-03-05', '2024-03-06', 2),
+    ('2024-03-07', '2024-03-08', 4),
+    ('2024-03-09', '2024-03-10', 5),
+    ('2024-04-01', '2024-04-02', 1),
+    ('2024-04-03', '2024-04-04', 2),
+    ('2024-04-05', '2024-04-06', 3),
+    ('2024-04-07', '2024-04-08', 4),
+    ('2024-04-09', '2024-04-10', 5),
+    ('2024-05-01', '2024-05-02', 1),
+    ('2024-05-03', '2024-05-04', 2),
+    ('2024-05-05', '2024-05-06', 3),
+    ('2024-05-07', '2024-05-08', 4),
+    ('2024-05-09', '2024-05-10', 5),
+    ('2024-06-01', '2024-06-02', 1),
+    ('2024-06-03', '2024-06-04', 2),
+    ('2024-06-05', '2024-06-06', 3),
+    ('2024-06-07', '2024-06-08', 4),
+    ('2024-06-09', '2024-06-10', 5),
+    ('2024-07-01', '2024-07-02', 1),
+    ('2024-07-03', '2024-07-04', 2),
+    ('2024-07-05', '2024-07-06', 3);
+```
+
+--- 
+
+### End of Dataset
