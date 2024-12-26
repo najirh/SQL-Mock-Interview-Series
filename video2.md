@@ -1,6 +1,6 @@
 # SQL Mock Interview Series
 
-## SQL Mock Interview 2
+## SQL Mock Interview 1 & 2
 
 ### Questions
 
